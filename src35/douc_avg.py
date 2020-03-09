@@ -2,26 +2,80 @@ import mnist_loader
 import numpy as np
 
 
-def get_averages():
-    a = mnist_loader.load_data_wrapper()
+all_pics = mnist_loader.load_data_wrapper()
+
+def get_averages(training_pics):
+    """
+    training_pics = training set with correct value as vector
+    return one dim array 
+    """
     sums = np.zeros((10,2))
 
-    for pic_tup in a[0]:
+    for pic_tup in training_pics:
         picture = pic_tup[0]
-        value_vector = pic_tup[1]
-        value = np.where(value_vector == 1)[0]
+        # transform because it is vector in all_pics[0]
+        value = np.where(pic_tup[1] == 1)[0]
+
         avg = np.average(picture)
         sums[value,0] = sums[value,0] + 1
         sums[value,1] = sums[value,1] + avg
 
-    avg = (sums[:, 0] /sums[:, 1])
-    return avg
+    return sums[:, 1] / sums[:, 0]
 
-# print(get_averages())
+avgs = np.array([0.17330245, 0.07609738, 0.14833457, 0.141417, 0.12145503,
+0.12799294, 0.13696827, 0.11464137, 0.15035786, 0.12250709])
 
-def guess_number(pic_avg):
-    pass
+def sorted_avgs(avgs):
+    """
+    avgs = numpy array with avg darkness values for numbers 0-9
+    returns 2 dimensional sorted array with value and number
+    """
+    # reshape so that can be appended
+    avgs = avgs.reshape((1, 10))
+    order = np.array([i for i in range(10)])
+    order = order.reshape((1, 10))
+    # appended to preserve numbers with values after sorting
+    table = np.append(avgs, order, axis=0)
 
+    #create sorting key that can be applied to the table
+    sorting_key = table[0,:].argsort()
+    avgs = table[:, sorting_key]
+    # print(avgs.shape)
+    avgs = avgs.transpose()
+
+    return avgs
+
+
+def gess_number(pic, avgs):
+    avg = np.average(pic)
+    for i in range(len(avgs)):
+        upper_limit = avgs[i,0]
+        n = avgs[i,1]
+        if avg < upper_limit:
+            return n
+    return avgs[i,1]
+
+def gess_all_numbers(pics, sorted_avgs):
+    """
+    """
+    # for i in range(len(sorted_avgs)):
+    #     pass
+    return
+
+
+
+gess_all_numbers(all_pics[1], sorted_avgs(avgs))
+
+x = next(all_pics[0])
+pic = x[0]
+number = np.where(x[1] == 1)[0]
+
+print("should be", number)
+print("pic avg", np.average(pic))
+sorted_a = sorted_avgs(avgs)
+print(sorted_a)
+print("----")
+print(gess_number(pic, sorted_avgs(avgs)))
 
 exit()
 
