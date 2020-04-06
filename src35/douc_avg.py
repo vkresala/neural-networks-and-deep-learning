@@ -2,6 +2,7 @@ import mnist_loader
 import numpy as np
 
 
+
 all_pics = mnist_loader.load_data_wrapper()
 
 def get_averages(training_pics):
@@ -22,7 +23,7 @@ def get_averages(training_pics):
 
     return sums[:, 1] / sums[:, 0]
 
-avgs = np.array([0.17330245, 0.07609738, 0.14833457, 0.141417, 0.12145503,
+AVGS = np.array([0.17330245, 0.07609738, 0.14833457, 0.141417, 0.12145503,
 0.12799294, 0.13696827, 0.11464137, 0.15035786, 0.12250709])
 
 def sorted_avgs(avgs):
@@ -43,54 +44,64 @@ def sorted_avgs(avgs):
     # print(avgs.shape)
     avgs = avgs.transpose()
 
-    return avgs
+    new_limits = []
+    for i,j in zip(avgs[:-1], avgs[1:]):
+        nl = (i[0] + j[0]) / 2
+        val = i[1]
+        new_limits.append((nl, val))
+    new_limits.append([1, avgs[len(avgs)-1, 1]])
+
+    return np.array(new_limits)
 
 
-def gess_number(pic, avgs):
-    avg = np.average(pic)
-    for i in range(len(avgs)):
-        upper_limit = avgs[i,0]
-        n = avgs[i,1]
+def guess_number(avg, sorted_avgs):
+    """
+    avg = average from pic form zip file  
+    sorted_avgs = sorted averages calculated on training set  
+    returns guessed number  
+    """
+    # avg = np.average(pic)
+    for i in range(len(sorted_avgs)):
+        upper_limit = sorted_avgs[i,0]
+        n = sorted_avgs[i,1]
         if avg < upper_limit:
             return n
-    return avgs[i,1]
+    return n
+
 
 def gess_all_numbers(pics, sorted_avgs):
     """
+    pics = dataset with pictures
+    sorted_avgs = 2dim array with average vlaues 
+    returns average matching % as float <0,1>
     """
-    # for i in range(len(sorted_avgs)):
-    #     pass
-    return
-
-
-
-gess_all_numbers(all_pics[1], sorted_avgs(avgs))
-
-x = next(all_pics[0])
-pic = x[0]
-number = np.where(x[1] == 1)[0]
-
-print("should be", number)
-print("pic avg", np.average(pic))
-sorted_a = sorted_avgs(avgs)
-print(sorted_a)
-print("----")
-print(gess_number(pic, sorted_avgs(avgs)))
-
-exit()
+    result = [] # prvni prvek = avg, druhy = co to je, treti = odhad
+    for pair in pics:
+        avg = np.average(pair[0])
+        guess = guess_number(np.average(pair[0]), sorted_avgs)
+        result.append((avg, pair[1], guess))
+ 
+    return result
+    
 
 
 
 
+# x = next(all_pics[0])
+# pic = x[0]
+# number = np.where(x[1] == 1)[0]
+
+# print("should be", number)
+# print("pic avg", np.average(pic))
+# sorted_a = sorted_avgs(avgs)
+# print(sorted_a)
+# print("----")
+# print(gess_number(pic, sorted_avgs(avgs)))
+
+# exit()
 
 
-
-
-
-
-
-
-def show_image():
+def show_image(a):
     tup = next(a[1])
     pic = tup[0]
     for i in range(28):
@@ -101,3 +112,9 @@ def show_image():
             else:
                 print(' ', end='')
         print('')
+
+if __name__ == "__main__":
+    result = np.array(gess_all_numbers(all_pics[1], sorted_avgs(AVGS)))
+    result = np.where(result[:,1] == result[:,2], 1, 0)
+    print("match       ", np.average(result))
+    print("# of matches", np.sum(result))
