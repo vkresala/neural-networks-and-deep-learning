@@ -14,12 +14,35 @@ class NN_info:
     
 def sigmoid_f(ws, xs, b):
     '''
-    ws = np.array with weights
-    xs = np.array with values from brevois layer
+    ws = np.array with weights [4rows x 5columns]matrix
+    xs = np.array with values from prevois layer [5rows x 1column]matrix
     b = bias
+
+    SIGMOID = 1/(1+exp(-∑j*wj*xj -b))
+    wj =([
+      [ w1,  w2,  w3,  w4,  w5],    
+      [ w6,  w7,  w8,  w9, w10],    
+      [w11, w12, w13, w14, w15],    
+      [w16, w17, w18, w19, w20]     
+    ])
+
+    xj = ([
+       [x1],
+       [x2],
+       [x3],
+       [x4],
+       [x5]
+    ])
+
+    ∑j*wj*xj = ([
+        [(w1*x1)+(w2*x2)+(w3*x3)+(w4*x4)+(w5*x5)],    
+        [(w6*x1)+(w7*x2)+(w8*x3)+(w9*x4)+(w10*x5)],     
+        [(w14*x1)+(w12*x2)+(w13*x3)+(w14*x4)+(w15*x5)],     
+        [(w16*x1)+(w17*x2)+(w18*x3)+(w19*x4)+(w20*x5)],  
+    ])
     '''
-    # domaci ukol
-    pass
+    return 1/(1 + exp(-np.dot(ws,xs) -b))
+    
 
 
 network = NN_info([5,4,3,2])
