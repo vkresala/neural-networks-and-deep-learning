@@ -1,7 +1,7 @@
 import numpy as np
 
 class NN_info:
-    def __init__(self, nn_size):
+    def __init__(self, nn_size, sigmoid_f):
         '''
         nn_size =  rozměry objektu  tzv. kolik bude nouronů v jaké vrstvě
         např. (5,4,3,2)
@@ -11,7 +11,16 @@ class NN_info:
         self.nn_size = nn_size
         self.biases = [np.random.randn(x, 1) for x in nn_size[1:]]
         self.weights = [np.random.randn(z,y) for y,z in zip(nn_size[:-1], nn_size[1:])]
-    
+        self.sigmoid_f = sigmoid_f
+
+    def guess(self, input_data):
+        '''
+        input_data = numpy array with measure values
+        result = values in last layer of our network
+        '''
+        # self.sigmoid_f
+        return input_data
+
 def sigmoid_f(ws, xs, b):
     '''
     ws = np.array with weights [4rows x 5columns]matrix
@@ -43,7 +52,23 @@ def sigmoid_f(ws, xs, b):
     '''
     return 1/(1 + exp(-np.dot(ws,xs) -b))
     
+def simple_sig(ws, xs, b):
+    # only for testing purposes
+    return np.dot(ws,xs)+b
 
 
-network = NN_info([5,4,3,2])
-print(network.weights)
+
+
+# Mějme neuronovou síť [5,4,3,2]
+# 1. funkce která načte data
+# 2. prohnat data sítí
+# 3. Učení se, porovnání s hodnotou, která by měla vyjít
+
+
+
+
+if __name__ == "__main__":
+    test_ws = np.random.randint(1,5, size=(4,5))
+    test_x = np.random.randint(1,5, size=(5,1))
+    network = NN_info([5,4,3,2])
+    print(network.weights)
