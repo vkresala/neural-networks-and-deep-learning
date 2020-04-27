@@ -1,7 +1,8 @@
 import numpy as np
+from math import exp
 
 class NN_info:
-    def __init__(self, nn_size, sigmoid_f):
+    def __init__(self, nn_size, neuron_f):
         '''
         nn_size =  rozměry objektu  tzv. kolik bude nouronů v jaké vrstvě
         např. (5,4,3,2)
@@ -11,24 +12,28 @@ class NN_info:
         self.nn_size = nn_size
         self.biases = [np.random.randn(x, 1) for x in nn_size[1:]]
         self.weights = [np.random.randn(z,y) for y,z in zip(nn_size[:-1], nn_size[1:])]
-        self.sigmoid_f = sigmoid_f
+        self.neuron_f = neuron_f
 
     def guess(self, input_data):
         '''
-        input_data = numpy array with measure values
+        input_data = numpy array with measured values
         result = values in last layer of our network
         '''
-        # self.sigmoid_f
-        return input_data
+        result = self.neuron_f(self.weights, input_data, self.biases)
+        return np.array(result)
 
 
 def sigmoid_f(ws, xs, b):
     '''
-    ws = np.array with weights [4rows x 5columns]matrix
+    ws = np.array with weights [1rows x 5columns]matrix for specific neuron
     xs = np.array with values from prevois layer [5rows x 1column]matrix
     b = bias
+    returns value of 1-neuron as float
+
+    it is a good idea to optimize this, because it can be performed
+    to whole layer of neurons at once
     '''
-    return 1/(1 + np.exp(-np.dot(ws,xs) -b))
+    return 1/(1 + exp(-np.dot(ws,xs) -b))
     
     
 def simple_sig(ws, xs, b):
