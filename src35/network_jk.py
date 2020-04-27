@@ -21,7 +21,38 @@ class NN_info:
         # self.sigmoid_f
         return input_data
 
+
 def sigmoid_f(ws, xs, b):
+    '''
+    ws = np.array with weights [4rows x 5columns]matrix
+    xs = np.array with values from prevois layer [5rows x 1column]matrix
+    b = bias
+    '''
+    return 1/(1 + np.exp(-np.dot(ws,xs) -b))
+    
+    
+def simple_sig(ws, xs, b):
+    # only for testing purposes
+    return np.dot(ws,xs)+b
+
+
+
+
+# Mějme neuronovou síť [5,4,3,2]
+# 1. funkce která načte data
+# 2. prohnat data sítí
+# 3. Učení se, porovnání s hodnotou, která by měla vyjít
+
+
+
+
+if __name__ == "__main__":
+    test_ws = np.random.randint(1,5, size=(4,5))
+    test_x = np.random.randint(1,5, size=(5,1))
+    network = NN_info([5,4,3,2])
+    print(network.weights)
+
+
     '''
     ws = np.array with weights [4rows x 5columns]matrix
     xs = np.array with values from prevois layer [5rows x 1column]matrix
@@ -50,25 +81,3 @@ def sigmoid_f(ws, xs, b):
         [(w16*x1)+(w17*x2)+(w18*x3)+(w19*x4)+(w20*x5)],  
     ])
     '''
-    return 1/(1 + exp(-np.dot(ws,xs) -b))
-    
-def simple_sig(ws, xs, b):
-    # only for testing purposes
-    return np.dot(ws,xs)+b
-
-
-
-
-# Mějme neuronovou síť [5,4,3,2]
-# 1. funkce která načte data
-# 2. prohnat data sítí
-# 3. Učení se, porovnání s hodnotou, která by měla vyjít
-
-
-
-
-if __name__ == "__main__":
-    test_ws = np.random.randint(1,5, size=(4,5))
-    test_x = np.random.randint(1,5, size=(5,1))
-    network = NN_info([5,4,3,2])
-    print(network.weights)
