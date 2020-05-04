@@ -5,9 +5,8 @@ class NN_info:
     def __init__(self, nn_size, neuron_f):
         '''
         nn_size =  rozměry objektu  tzv. kolik bude nouronů v jaké vrstvě
-        např. (5,4,3,2)
-
-        [[-1, 1, 0, -0.5], [0.1, 0.7, -0.8], [0, 1.1]]
+            např. (5,4,3,2)
+        neufon_f = funkce pouzita pro neuron (sigmoidni nebo jina)
         '''
         self.nn_size = nn_size
         self.biases = [np.random.randn(x, 1) for x in nn_size[1:]]
@@ -19,8 +18,27 @@ class NN_info:
         input_data = numpy array with measured values
         result = values in last layer of our network
         '''
-        result = self.neuron_f(self.weights, input_data, self.biases)
+        # toto je spatne
+        # result = self.neuron_f(self.weights, input_data, self.biases)
+        if len(self.nn_size) == 1:
+            # print(self.nn_size)
+            return input_data
+        else:
+            result = []
+            for i in range(self.nn_size[1]):
+                ws = self.weights[i,:]
+                xs = input_data
+                b = self.biases[:,i]
+                ss = simple_sig(ws, xs, b)
+                print(ss, type(ss))
+                result.append(ss)
+        print("jsem tady", result)
+
+
         return np.array(result)
+        # return np.array(result)
+
+        
 
 
 def sigmoid_f(ws, xs, b):
@@ -38,7 +56,7 @@ def sigmoid_f(ws, xs, b):
     
 def simple_sig(ws, xs, b):
     # only for testing purposes
-    return np.dot(ws,xs)+b
+    return int(np.dot(ws, xs) + b)
 
 
 
@@ -54,7 +72,7 @@ def simple_sig(ws, xs, b):
 if __name__ == "__main__":
     test_ws = np.random.randint(1,5, size=(4,5))
     test_x = np.random.randint(1,5, size=(5,1))
-    network = NN_info([5,4,3,2])
+    network = NN_info([5,4,3,2], sigmoid_f)
     print(network.weights)
 
 
