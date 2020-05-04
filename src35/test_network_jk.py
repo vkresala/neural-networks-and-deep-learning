@@ -17,6 +17,8 @@ class test_nn(unittest.TestCase):
         input_layer = np.array([1,2])
         result = network.guess(input_layer)
 
+        # self.assertEqual(arr1.tolist(), arr2.tolist())
+        
         np_eq = np.array_equal(result, np.array([1,2]))
         self.assertEqual(np_eq, True)
 
