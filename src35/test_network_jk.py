@@ -4,64 +4,77 @@ import network_jk
 
 class test_nn(unittest.TestCase):
     # @unittest.skip("skip")
-    def test_guess_0_return_type(self):
+    def test_feed_forward_0_return_type(self):
         input_layer = np.array([-2,-1,0,1,0])
         network = network_jk.NN_info([5], network_jk.sigmoid_f)
 
-        type_network_result = type(network.guess(input_layer))
+        type_network_result = type(network.feed_forward(input_layer))
         type_should_be = type(np.array([0.1, 1.1]))
 
         self.assertEqual(type_network_result, type_should_be)
 
 
     # @unittest.skip("skip")
-    def test_guess_1(self):
+    def test_feed_forward_1(self):
         # mockup NN object
         network = network_jk.NN_info([2, 2], network_jk.simple_sig)
-        network.weights = np.array([[1, 1], [1, 1]])
-        network.biases = np.array([[1, 1]])
+        network.weights = [np.array([[1, 1], [1, 1]])]
+        network.biases = [np.array([[1, 1]])]
 
         # input values
         input_layer = np.array([1,2])
 
 
-        result = network.guess(input_layer).tolist()
+        result = network.feed_forward(input_layer).tolist()
         self.assertEqual(result, [4, 4])
 
+    # @unittest.skip("skip")
+    def test_feed_forward_2(self):
+        # mockup NN object
+        network = network_jk.NN_info([5, 3], network_jk.simple_sig)
+        network.weights = [np.array([[1,1,1,1,2], [1,1,1,1,3], [1,1,1,1,4],])]
+        network.biases = [np.array([[1, 1, 1]])]
+
+        # input values
+        input_layer = np.array([1,2,3,4,5])
+
+
+        result = network.feed_forward(input_layer).tolist()
+        self.assertEqual(result, [21, 26, 31])
+
+    # @unittest.skip("skip")
+    def test_feed_forward_3(self):
+        # mockup NN object
+        network = network_jk.NN_info([2, 2, 2], network_jk.simple_sig)
+        network.weights = [np.array([[1,1], [1,1]]), np.array([[1,1], [1,2]])]
+        network.biases = [np.array([[1, 1]]), np.array([[0, 0]])]
+
+        # input values
+        input_layer = np.array([1,2])
+
+
+        result = network.feed_forward(input_layer).tolist()
+        self.assertEqual(result, [8, 12])
 
     '''
+    4.5.2020
     otestovali jsme, ze nam funguje sigmoidni funkce, zjednodusena funkce,
-    guess funkce funguje na sit o rozmerech 2x2
+    feed_forward funkce funguje na sit o rozmerech 2x2
 
     priste budeme pridavat test case
     - sit o rozmerech 5x3
     - sit o rozmerech 2x2x2
-    - sit o rozmerech 3x3x3x3
+
+    13.5.2020
+    dodělali jsem feed forward, otestovali a funguje
+    vytvorili jsme funkci evaluate, ktera jeste neni otestovana > napsat 2 testy,
+    pouzit+upravit ty, ktere uz jsou
+
+    priste nebo do priste udelame objekt, ktery nacte data a vyhodnoti, jak
+    se siti dari odhadovat vysledky
+    pouzit mnist_loader podobne jako v averages
     '''
 
-
-
-    # def test_guess_2(self):
-    #     # mockup NN object
-    #     network = network_jk.NN_info([2, 1], network_jk.simple_sig)
-
-    #     # hacking part start
-    #     network.weights = [np.array([[2], [3]])] # ws
-    #     network.biases = [np.array([[1]])] # b
-    #     # hacking part end
-
-    #     # input values
-    #     input_layer = np.array([[1,2]]) # xs
-
-    #     result = network.guess(input_layer)
-    #     print("****************")
-    #     print()
-    #     print("****************")
-
-    #     np_eq = np.array_equal(result, np.array([9.0]))
-    #     self.assertEqual(np_eq, True)
-
-    # @unittest.skip("skip")
     def test_sigmoid_2(self):
         ws = np.array([[1., 1., 1., 1., 1.]])
         xs = np.array([[1.],[1.],[1.],[1.],[1.]])
@@ -119,18 +132,6 @@ class test_nn(unittest.TestCase):
         self.assertEqual(result_type, expected_type)
         
         # https://stackoverflow.com/questions/3302949/best-way-to-assert-for-numpy-array-equality
-        #  numpy.testing.assert_array_equal(arr1, arr2)
-        # nefunguje kvůli floating point toleranci
-        # np.testing.assert_allclose(x, y, rtol=1e-5, atol=0)
-        # try:
-        #     np.testing.assert_allclose(network_jk.sigmoid_f(ws, xs, b), res_sigm_f, rtol=1e-5)
-        #     res = True
-        # except AssertionError as err:
-        #     res = False
-        #     print (err)
-        # self.assertTrue(res)
-
-
  #  & "C:/Program Files/Python38/python.exe" -m unittest c:/Users/kalina.BUDEJOVICE/Scripts/neural-networks-and-deep-learning/src35/test_network_jk.py
 
 if __name__ == "__main__":

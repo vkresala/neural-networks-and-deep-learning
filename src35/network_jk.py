@@ -13,32 +13,37 @@ class NN_info:
         self.weights = [np.random.randn(z,y) for y,z in zip(nn_size[:-1], nn_size[1:])]
         self.neuron_f = neuron_f
 
-    def guess(self, input_data):
+    def feed_forward(self, input_data):
         '''
         input_data = numpy array with measured values
         result = values in last layer of our network
         '''
-        # toto je spatne
-        # result = self.neuron_f(self.weights, input_data, self.biases)
         if len(self.nn_size) == 1:
-            # print(self.nn_size)
             return input_data
         else:
-            result = []
-            for i in range(self.nn_size[1]):
-                ws = self.weights[i,:]
-                xs = input_data
-                b = self.biases[:,i]
-                ss = simple_sig(ws, xs, b)
-                print(ss, type(ss))
-                result.append(ss)
-        print("jsem tady", result)
+            xs = input_data
+            for layer in range(len(self.nn_size)-1):
+                out_values = []
+                for n in range(self.nn_size[layer+1]):
+                    ws = self.weights[layer][n,:]
+                    b = self.biases[layer][:,n]
+                    ss = simple_sig(ws, xs, b)
+                    out_values.append(ss)
+                xs = out_values
+
+        return np.array(xs)
 
 
-        return np.array(result)
-        # return np.array(result)
+    def evaluate(self, input_data, expected_value):
+        '''
+        input_data = np array with measured valeus
+        expected value = how last layer of neurons should look like
+        '''
 
-        
+        if self.feed_forward(input_data) == expected_value:
+            return True
+        else:
+            return False
 
 
 def sigmoid_f(ws, xs, b):
