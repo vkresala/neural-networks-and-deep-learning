@@ -13,6 +13,7 @@ class NN_info:
         self.weights = [np.random.randn(z,y) for y,z in zip(nn_size[:-1], nn_size[1:])]
         self.neuron_f = neuron_f
 
+
     def feed_forward(self, input_data):
         '''
         input_data = numpy array with measured values

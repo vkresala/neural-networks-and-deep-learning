@@ -3,7 +3,7 @@ import numpy as np
 import network_jk
 
 class test_nn(unittest.TestCase):
-    # @unittest.skip("skip")
+    @unittest.skip("skip")
     def test_feed_forward_0_return_type(self):
         input_layer = np.array([-2,-1,0,1,0])
         network = network_jk.NN_info([5], network_jk.sigmoid_f)
@@ -14,7 +14,7 @@ class test_nn(unittest.TestCase):
         self.assertEqual(type_network_result, type_should_be)
 
 
-    # @unittest.skip("skip")
+    @unittest.skip("skip")
     def test_feed_forward_1(self):
         # mockup NN object
         network = network_jk.NN_info([2, 2], network_jk.simple_sig)
@@ -28,7 +28,8 @@ class test_nn(unittest.TestCase):
         result = network.feed_forward(input_layer).tolist()
         self.assertEqual(result, [4, 4])
 
-    # @unittest.skip("skip")
+
+    @unittest.skip("skip")
     def test_feed_forward_2(self):
         # mockup NN object
         network = network_jk.NN_info([5, 3], network_jk.simple_sig)
@@ -42,7 +43,8 @@ class test_nn(unittest.TestCase):
         result = network.feed_forward(input_layer).tolist()
         self.assertEqual(result, [21, 26, 31])
 
-    # @unittest.skip("skip")
+
+    @unittest.skip("skip")
     def test_feed_forward_3(self):
         # mockup NN object
         network = network_jk.NN_info([2, 2, 2], network_jk.simple_sig)
@@ -56,25 +58,28 @@ class test_nn(unittest.TestCase):
         result = network.feed_forward(input_layer).tolist()
         self.assertEqual(result, [8, 12])
 
-    '''
-    4.5.2020
-    otestovali jsme, ze nam funguje sigmoidni funkce, zjednodusena funkce,
-    feed_forward funkce funguje na sit o rozmerech 2x2
 
-    priste budeme pridavat test case
-    - sit o rozmerech 5x3
-    - sit o rozmerech 2x2x2
+    # @unittest.skip("skip")
+    def test_evaluate_true(self):
+        # mockup NN object
+        network = network_jk.NN_info([2, 2, 2], network_jk.simple_sig)
+        network.weights = [np.array([[1,1], [1,1]]), np.array([[1,1], [1,2]])]
+        network.biases = [np.array([[1, 1]]), np.array([[0, 0]])]
 
-    13.5.2020
-    dodělali jsem feed forward, otestovali a funguje
-    vytvorili jsme funkci evaluate, ktera jeste neni otestovana > napsat 2 testy,
-    pouzit+upravit ty, ktere uz jsou
+        # input values
+        input_layer = np.array([1,2])
 
-    priste nebo do priste udelame objekt, ktery nacte data a vyhodnoti, jak
-    se siti dari odhadovat vysledky
-    pouzit mnist_loader podobne jako v averages
-    '''
+        # input_data = network.feed_forward(input_layer).tolist()
+        # print(input_data)
+        # print(type(input_data))
+        expected_value = [2, 2]
+        print("##############################")
+        print(network.evaluate(network.feed_forward(input_layer)))
+        self.assertEqual(network.evaluate(network.feed_forward(input_layer)),expected_value )
 
+
+
+    @unittest.skip("skip")
     def test_sigmoid_2(self):
         ws = np.array([[1., 1., 1., 1., 1.]])
         xs = np.array([[1.],[1.],[1.],[1.],[1.]])
@@ -84,7 +89,8 @@ class test_nn(unittest.TestCase):
 
         self.assertAlmostEqual(network_jk.sigmoid_f(ws, xs, b), res_sigm_f)
 
-    # @unittest.skip("skip")
+
+    @unittest.skip("skip")
     def test_sigmoid_3(self):
         ws = np.array([[2., 1., 1., 1., 1.]])
         xs = np.array([[1.],[1.],[1.],[1.],[1.]])
@@ -94,7 +100,8 @@ class test_nn(unittest.TestCase):
 
         self.assertAlmostEqual(network_jk.sigmoid_f(ws, xs, b), res_sigm_f)
 
-    # @unittest.skip("skip")
+
+    @unittest.skip("skip")
     def test_sigmoid_4(self):
         ws = np.array([[3., 1., 1., 1., 1.]])
         xs = np.array([[1.],[1.],[1.],[1.],[1.]])
@@ -104,7 +111,8 @@ class test_nn(unittest.TestCase):
 
         self.assertAlmostEqual(network_jk.sigmoid_f(ws, xs, b), res_sigm_f)
 
-    # @unittest.skip("skip")
+
+    @unittest.skip("skip")
     def test_sigmoid_5(self):
         ws = np.array([[4., 1., 1., 1., 1.]])
         xs = np.array([[1.],[1.],[1.],[1.],[1.]])
@@ -115,6 +123,7 @@ class test_nn(unittest.TestCase):
         self.assertAlmostEqual(network_jk.sigmoid_f(ws, xs, b), res_sigm_f)
 
 
+    @unittest.skip("skip")
     def test_simple_sig(self):
         ws = np.array([[4., 1., 1., 1., 1.]])
         xs = np.array([[1.],[1.],[1.],[1.],[1.]])
@@ -122,6 +131,8 @@ class test_nn(unittest.TestCase):
         res_simple_sig = 10
         self.assertAlmostEqual(network_jk.simple_sig(ws, xs, b), res_simple_sig)
 
+
+    @unittest.skip("skip")
     def test_simple_sig_type(self):
         ws = np.array([[4., 1., 1., 1., 1.]])
         xs = np.array([[1.],[1.],[1.],[1.],[1.]])
@@ -130,9 +141,28 @@ class test_nn(unittest.TestCase):
         expected_type = type(10)
 
         self.assertEqual(result_type, expected_type)
-        
-        # https://stackoverflow.com/questions/3302949/best-way-to-assert-for-numpy-array-equality
- #  & "C:/Program Files/Python38/python.exe" -m unittest c:/Users/kalina.BUDEJOVICE/Scripts/neural-networks-and-deep-learning/src35/test_network_jk.py
+
+
+'''
+4.5.2020
+otestovali jsme, ze nam funguje sigmoidni funkce, zjednodusena funkce,
+feed_forward funkce funguje na sit o rozmerech 2x2
+
+priste budeme pridavat test case
+- sit o rozmerech 5x3
+- sit o rozmerech 2x2x2
+
+13.5.2020
+dodělali jsem feed forward, otestovali a funguje
+vytvorili jsme funkci evaluate, ktera jeste neni otestovana > napsat 2 testy,
+pouzit+upravit ty, ktere uz jsou
+
+priste nebo do priste udelame objekt, ktery nacte data a vyhodnoti, jak
+se siti dari odhadovat vysledky
+pouzit mnist_loader podobne jako v averages
+'''
 
 if __name__ == "__main__":
     unittest.main()
+
+
