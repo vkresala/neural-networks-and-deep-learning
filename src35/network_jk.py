@@ -1,4 +1,5 @@
 import numpy as np
+import mnist_loader
 from math import exp
 
 class NN_info:
@@ -40,8 +41,13 @@ class NN_info:
         input_data = np array with measured valeus
         expected value = how last layer of neurons should look like
         '''
+        # (A==B).all()
+        # np.round(data, 2)
 
-        if self.feed_forward(input_data) == expected_value:
+        network_output = self.feed_forward(input_data)
+        network_output = np.round(network_output, 0)
+
+        if (network_output == expected_value).all():
             return True
         else:
             return False
@@ -72,15 +78,43 @@ def simple_sig(ws, xs, b):
 # 2. prohnat data sítí
 # 3. Učení se, porovnání s hodnotou, která by měla vyjít
 
+class Evaluator:
+    '''
+    1. načte data 
+    2. zpracuje v siti a u někam si uloží výsledky 
+    3.vyhodnotí procent. úspěšnost
+    '''
 
+    def __init__(self, data_path, sizes, sigmoid_f):
+        self.data_path = data_path
+        self.results = []
+        self.network = NN_info(sizes, sigmoid_f)
+
+    def data_loader(self):
+        all_pics = mnist_loader.load_data_wrapper(self.data_path)
+        # self.training_data = all_pics[0]
+        self.validation_data = all_pics[1]
+        # self.test_data = all_pics[2]
+        del all_pics
+
+
+    def result_dumper(self):
+        pass
+        
+
+    def get_succes_rate(self):
+        pass
+    
 
 
 if __name__ == "__main__":
-    test_ws = np.random.randint(1,5, size=(4,5))
-    test_x = np.random.randint(1,5, size=(5,1))
-    network = NN_info([5,4,3,2], sigmoid_f)
-    print(network.weights)
-
+    # test_ws = np.random.randint(1,5, size=(4,5))
+    # test_x = np.random.randint(1,5, size=(5,1))
+    # network = NN_info([5,4,3,2], sigmoid_f)
+    # print(network.weights)
+    p = r'C:\Users\kalina.BUDEJOVICE\Scripts\neural-networks-and-deep-learning\src35\mnist.pkl.gz'
+    evalator = Evaluator(p, [784, 10], simple_sig)
+    evalator.data_loader()
 
     '''
     ws = np.array with weights [4rows x 5columns]matrix

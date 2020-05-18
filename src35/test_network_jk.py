@@ -62,9 +62,9 @@ class test_nn(unittest.TestCase):
     # @unittest.skip("skip")
     def test_evaluate_true(self):
         # mockup NN object
-        network = network_jk.NN_info([2, 2, 2], network_jk.simple_sig)
-        network.weights = [np.array([[1,1], [1,1]]), np.array([[1,1], [1,2]])]
-        network.biases = [np.array([[1, 1]]), np.array([[0, 0]])]
+        network = network_jk.NN_info([2, 2], network_jk.simple_sig)
+        network.weights = [np.array([[1, 1], [1, 1]])]
+        network.biases = [np.array([[1, 1]])]
 
         # input values
         input_layer = np.array([1,2])
@@ -72,10 +72,10 @@ class test_nn(unittest.TestCase):
         # input_data = network.feed_forward(input_layer).tolist()
         # print(input_data)
         # print(type(input_data))
-        expected_value = [2, 2]
+        expected_value = np.array([[4, 4]])
         print("##############################")
-        print(network.evaluate(network.feed_forward(input_layer)))
-        self.assertEqual(network.evaluate(network.feed_forward(input_layer)),expected_value )
+        # print(network.evaluate(network.feed_forward(input_layer)))
+        self.assertTrue(network.evaluate(input_layer,expected_value ))
 
 
 
@@ -160,6 +160,16 @@ pouzit+upravit ty, ktere uz jsou
 priste nebo do priste udelame objekt, ktery nacte data a vyhodnoti, jak
 se siti dari odhadovat vysledky
 pouzit mnist_loader podobne jako v averages
+
+18.5.2020
+v classe jsme vytvorili a otestovali metodu evaluate, ktera vyhodnocuje, jestli
+sit vyhodnotila data uspesne
+vytvorili evaluator tridu, kterou budeme pouzivat pro zjisteni uspesnosti 
+vytrenovane neuronove site
+
+DU
+dumper, success rate
+
 '''
 
 if __name__ == "__main__":
