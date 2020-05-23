@@ -93,17 +93,31 @@ class Evaluator:
     def data_loader(self):
         all_pics = mnist_loader.load_data_wrapper(self.data_path)
         # self.training_data = all_pics[0]
-        self.validation_data = all_pics[1]
+        data = self.validation_data = all_pics[1]
         # self.test_data = all_pics[2]
         del all_pics
+        return data
 
 
-    def result_dumper(self):
-        pass
+    def result_dumper(self, data):
+        '''
+        '''
+        dumper_records = []
+        for i in self.validation_data:
+            self.evaluate(self.data[0], self.data[1])
+            if i == True:
+                dumper_records.append(1)
+            else:
+                dumper_records.append(0)
+        
+        return dumper_records
         
 
-    def get_succes_rate(self):
-        pass
+    def get_succes_rate(self, dumper_records):
+        # print((sum(x))/(len(x)))
+        succes_rate = sum(self.dumper_records)/len(self.dumper_records)
+        
+        return succes_rate
     
 
 
@@ -114,8 +128,10 @@ if __name__ == "__main__":
     # print(network.weights)
     p = r'C:\Users\kalina.BUDEJOVICE\Scripts\neural-networks-and-deep-learning\src35\mnist.pkl.gz'
     evalator = Evaluator(p, [784, 10], simple_sig)
-    evalator.data_loader()
-
+    data = evalator.data_loader()
+    dumper = evalator.result_dumper(data)
+    ntwr_succ_rate = evalator.result_dumper(dumper)
+    print(ntwr_succ_rate)
     '''
     ws = np.array with weights [4rows x 5columns]matrix
     xs = np.array with values from prevois layer [5rows x 1column]matrix
