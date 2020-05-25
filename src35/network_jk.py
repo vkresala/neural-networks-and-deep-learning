@@ -38,7 +38,7 @@ class NN_info:
 
     def evaluate(self, input_data, expected_value):
         '''
-        input_data = np array with measured valeus
+        input_data = np array with measured valeus for one picture  
         expected value = how last layer of neurons should look like
         '''
         # (A==B).all()
@@ -89,34 +89,39 @@ class Evaluator:
         self.data_path = data_path
         self.results = []
         self.network = NN_info(sizes, sigmoid_f)
+        self.data_loader()
+
 
     def data_loader(self):
+        '''
+        do objektu načte data obrázků z druhe sady
+        '''
         all_pics = mnist_loader.load_data_wrapper(self.data_path)
-        # self.training_data = all_pics[0]
-        data = self.validation_data = all_pics[1]
-        # self.test_data = all_pics[2]
+        self.validation_data = all_pics[1]
         del all_pics
-        return data
+        return
 
 
-    def result_dumper(self, data):
+    def result_dumper(self):
         '''
+        Data prohnat sítí a porovná s očekávaným výsledkem. Zjištěný výsledek 0
+        OR 1 uloží do objektu
         '''
-        dumper_records = []
-        for i in self.validation_data:
-            self.evaluate(self.data[0], self.data[1])
-            if i == True:
-                dumper_records.append(1)
+        self.dumper_records = []
+        for picture in self.validation_data:
+            if self.network.evaluate(picture[0], picture[1]):
+                self.dumper_records.append(1)
             else:
-                dumper_records.append(0)
-        
-        return dumper_records
-        
+                self.dumper_records.append(0)
+        return
 
-    def get_succes_rate(self, dumper_records):
+
+    def get_succes_rate(self):
+        '''
+        returns success rate (0.0-1.0 float)
+        '''
         # print((sum(x))/(len(x)))
         succes_rate = sum(self.dumper_records)/len(self.dumper_records)
-        
         return succes_rate
     
 
@@ -126,12 +131,16 @@ if __name__ == "__main__":
     # test_x = np.random.randint(1,5, size=(5,1))
     # network = NN_info([5,4,3,2], sigmoid_f)
     # print(network.weights)
-    p = r'C:\Users\kalina.BUDEJOVICE\Scripts\neural-networks-and-deep-learning\src35\mnist.pkl.gz'
+
+    # p = r'C:\Users\kalina.BUDEJOVICE\Scripts\neural-networks-and-deep-learning\src35\mnist.pkl.gz'
+    p = r'C:\Users\vojte\Documents\GitHub\neural-networks-and-deep-learning\src35\mnist.pkl.gz'
     evalator = Evaluator(p, [784, 10], simple_sig)
-    data = evalator.data_loader()
-    dumper = evalator.result_dumper(data)
-    ntwr_succ_rate = evalator.result_dumper(dumper)
-    print(ntwr_succ_rate)
+    evalator.result_dumper()
+    print(evalator.get_succes_rate())
+    
+    
+    
+    
     '''
     ws = np.array with weights [4rows x 5columns]matrix
     xs = np.array with values from prevois layer [5rows x 1column]matrix

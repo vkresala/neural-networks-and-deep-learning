@@ -170,6 +170,15 @@ vytrenovane neuronove site
 DU
 dumper, success rate
 
+25.5.2020
+prosli jsme opacko objektoveho programovani
+uptavovali metody result_dumper a get_succes_rate
+konecny stav - error v simple sig, nove metody vypadaji dobre...
+TypeError: only size-1 arrays can be converted to Python scalars
+line 71, in simple_sig
+
+DU zkusit rozbehat
+
 '''
 
 if __name__ == "__main__":
