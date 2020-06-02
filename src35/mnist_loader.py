@@ -73,11 +73,11 @@ def load_data_wrapper(p=r'C:\Users\kalina.BUDEJOVICE\Scripts\neural-networks-and
     return (training_data, validation_data, test_data)
 
 
-def vectorized_result(j):
+def vectorized_result(j, size=10):
     """Return a 10-dimensional unit vector with a 1.0 in the jth
     position and zeroes elsewhere.  This is used to convert a digit
     (0...9) into a corresponding desired output from the neural
     network."""
-    e = np.zeros((10, 1))
+    e = np.zeros((size, 1))
     e[j] = 1.0
     return e

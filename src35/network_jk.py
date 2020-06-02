@@ -33,7 +33,7 @@ class NN_info:
                     out_values.append(ss)
                 xs = out_values
 
-        return np.array(xs)
+        return np.array([xs]).transpose()
 
 
     def evaluate(self, input_data, expected_value):
@@ -43,14 +43,23 @@ class NN_info:
         '''
         # (A==B).all()
         # np.round(data, 2)
-
+        print('tady0')
+        if type(expected_value) == int:
+            expected_value = mnist_loader.vectorized_result(expected_value,
+                                                            self.nn_size[-1])
+            print('tady1')
+            print(expected_value)
+            print(type(expected_value))
+    
         network_output = self.feed_forward(input_data)
         network_output = np.round(network_output, 0)
-
+        print(expected_value)
+        print(network_output)
         if (network_output == expected_value).all():
             return True
         else:
             return False
+
 
 
 def sigmoid_f(ws, xs, b):
@@ -109,7 +118,10 @@ class Evaluator:
         '''
         self.dumper_records = []
         for picture in self.validation_data:
-            if self.network.evaluate(picture[0], picture[1]):
+            picture_array = picture[0]
+            expected_number = picture[1]
+
+            if self.network.evaluate(picture_array,expected_number):
                 self.dumper_records.append(1)
             else:
                 self.dumper_records.append(0)
@@ -132,11 +144,14 @@ if __name__ == "__main__":
     # network = NN_info([5,4,3,2], sigmoid_f)
     # print(network.weights)
 
-    # p = r'C:\Users\kalina.BUDEJOVICE\Scripts\neural-networks-and-deep-learning\src35\mnist.pkl.gz'
-    p = r'C:\Users\vojte\Documents\GitHub\neural-networks-and-deep-learning\src35\mnist.pkl.gz'
+    paths = {'Vojta': r'C:\Users\vojte\Documents\GitHub\neural-networks-and-deep-learning\src35\mnist.pkl.gz',
+        'JirkaNB':r'C:\Users\kalina.BUDEJOVICE\Scripts\neural-networks-and-deep-learning\src35\mnist.pkl.gz',
+        'JirkaPC': r'C:\Users\krumm\scripts\neural-networks-and-deep-learning\src35\mnist.pkl.gz'}
+
+    p = paths['JirkaPC']
     evalator = Evaluator(p, [784, 10], simple_sig)
-    evalator.result_dumper()
-    print(evalator.get_succes_rate())
+    # evalator.result_dumper()
+    # print(evalator.get_succes_rate())
     
     
     

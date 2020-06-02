@@ -3,7 +3,7 @@ import numpy as np
 import network_jk
 
 class test_nn(unittest.TestCase):
-    @unittest.skip("skip")
+    # @unittest.skip("skip")
     def test_feed_forward_0_return_type(self):
         input_layer = np.array([-2,-1,0,1,0])
         network = network_jk.NN_info([5], network_jk.sigmoid_f)
@@ -14,7 +14,7 @@ class test_nn(unittest.TestCase):
         self.assertEqual(type_network_result, type_should_be)
 
 
-    @unittest.skip("skip")
+    # @unittest.skip("skip")
     def test_feed_forward_1(self):
         # mockup NN object
         network = network_jk.NN_info([2, 2], network_jk.simple_sig)
@@ -29,7 +29,7 @@ class test_nn(unittest.TestCase):
         self.assertEqual(result, [4, 4])
 
 
-    @unittest.skip("skip")
+    # @unittest.skip("skip")
     def test_feed_forward_2(self):
         # mockup NN object
         network = network_jk.NN_info([5, 3], network_jk.simple_sig)
@@ -44,7 +44,7 @@ class test_nn(unittest.TestCase):
         self.assertEqual(result, [21, 26, 31])
 
 
-    @unittest.skip("skip")
+    # @unittest.skip("skip")
     def test_feed_forward_3(self):
         # mockup NN object
         network = network_jk.NN_info([2, 2, 2], network_jk.simple_sig)
@@ -56,7 +56,7 @@ class test_nn(unittest.TestCase):
 
 
         result = network.feed_forward(input_layer).tolist()
-        self.assertEqual(result, [8, 12])
+        self.assertEqual(result, [[8], [12]])
 
 
     # @unittest.skip("skip")
@@ -64,22 +64,32 @@ class test_nn(unittest.TestCase):
         # mockup NN object
         network = network_jk.NN_info([2, 2], network_jk.simple_sig)
         network.weights = [np.array([[1, 1], [1, 1]])]
-        network.biases = [np.array([[1, 1]])]
+        network.biases = [np.array([[1, 2]])]
+        # input values
+        input_layer = np.array([1,2])
+        expected_value = np.array([[4.], [5]])
+        # expected_value[0] = 4.0
+
+        self.assertTrue(network.evaluate(input_layer,expected_value ))
+
+    # @unittest.skip("skip")
+    def test_evaluate_true2(self):
+        # mockup NN object
+        network = network_jk.NN_info([2, 2], network_jk.simple_sig)
+        network.weights = [np.array([[1, 1], [1, 1]])]
+        network.biases = [np.array([[-3, -2]])]
 
         # input values
         input_layer = np.array([1,2])
-
-        # input_data = network.feed_forward(input_layer).tolist()
-        # print(input_data)
-        # print(type(input_data))
-        expected_value = np.array([[4, 4]])
-        print("##############################")
-        # print(network.evaluate(network.feed_forward(input_layer)))
+        # expected_value = np.array([[0, 1]])
+        expected_value = 1
+        
+        # print("##############################")
+        # print(network.feed_forward(input_layer, ))
         self.assertTrue(network.evaluate(input_layer,expected_value ))
 
 
-
-    @unittest.skip("skip")
+    # @unittest.skip("skip")
     def test_sigmoid_2(self):
         ws = np.array([[1., 1., 1., 1., 1.]])
         xs = np.array([[1.],[1.],[1.],[1.],[1.]])
@@ -90,7 +100,7 @@ class test_nn(unittest.TestCase):
         self.assertAlmostEqual(network_jk.sigmoid_f(ws, xs, b), res_sigm_f)
 
 
-    @unittest.skip("skip")
+    # @unittest.skip("skip")
     def test_sigmoid_3(self):
         ws = np.array([[2., 1., 1., 1., 1.]])
         xs = np.array([[1.],[1.],[1.],[1.],[1.]])
@@ -101,7 +111,7 @@ class test_nn(unittest.TestCase):
         self.assertAlmostEqual(network_jk.sigmoid_f(ws, xs, b), res_sigm_f)
 
 
-    @unittest.skip("skip")
+    # @unittest.skip("skip")
     def test_sigmoid_4(self):
         ws = np.array([[3., 1., 1., 1., 1.]])
         xs = np.array([[1.],[1.],[1.],[1.],[1.]])
@@ -112,7 +122,7 @@ class test_nn(unittest.TestCase):
         self.assertAlmostEqual(network_jk.sigmoid_f(ws, xs, b), res_sigm_f)
 
 
-    @unittest.skip("skip")
+    # @unittest.skip("skip")
     def test_sigmoid_5(self):
         ws = np.array([[4., 1., 1., 1., 1.]])
         xs = np.array([[1.],[1.],[1.],[1.],[1.]])
@@ -123,7 +133,7 @@ class test_nn(unittest.TestCase):
         self.assertAlmostEqual(network_jk.sigmoid_f(ws, xs, b), res_sigm_f)
 
 
-    @unittest.skip("skip")
+    # @unittest.skip("skip")
     def test_simple_sig(self):
         ws = np.array([[4., 1., 1., 1., 1.]])
         xs = np.array([[1.],[1.],[1.],[1.],[1.]])
@@ -132,7 +142,7 @@ class test_nn(unittest.TestCase):
         self.assertAlmostEqual(network_jk.simple_sig(ws, xs, b), res_simple_sig)
 
 
-    @unittest.skip("skip")
+    # @unittest.skip("skip")
     def test_simple_sig_type(self):
         ws = np.array([[4., 1., 1., 1., 1.]])
         xs = np.array([[1.],[1.],[1.],[1.],[1.]])
@@ -179,6 +189,33 @@ line 71, in simple_sig
 
 DU zkusit rozbehat
 
+2.6. 2020
+upravena funkce evaluate(), by vracela vektorizovanou expected_value
+3 test casy failuji:
+
+FAIL: test_feed_forward_3 (__main__.test_nn)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "c:/Users/krumm/scripts/neural-networks-and-deep-learning/src35/test_network_jk.py", line 59, in test_feed_forward_3
+    self.assertEqual(result, [[8], [12]])
+AssertionError: Lists differ: [8, 12] != [[8], [12]]
+
+FAIL: test_evaluate_true2 (__main__.test_nn)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "c:/Users/krumm/scripts/neural-networks-and-deep-learning/src35/test_network_jk.py", line 89, in test_evaluate_true2
+    self.assertTrue(network.evaluate(input_layer,expected_value ))
+AssertionError: False is not true
+
+FAIL: test_evaluate_true (__main__.test_nn)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "c:/Users/krumm/scripts/neural-networks-and-deep-learning/src35/test_network_jk.py", line 73, in test_evaluate_true
+    self.assertTrue(network.evaluate(input_layer,expected_value ))
+AssertionError: False is not true
+
+chceme upravit feed forward tak, aby vysledek byl kompatibilni s vystupem
+vectorized_result
 '''
 
 if __name__ == "__main__":
