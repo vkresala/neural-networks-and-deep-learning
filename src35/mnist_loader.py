@@ -81,3 +81,7 @@ def vectorized_result(j, size=10):
     e = np.zeros((size, 1))
     e[j] = 1.0
     return e
+
+
+if __name__ == '__main__':
+    print(vectorized_result(5))

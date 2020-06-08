@@ -3,7 +3,7 @@ import mnist_loader
 from math import exp
 
 class NN_info:
-    def __init__(self, nn_size, neuron_f):
+    def __init__(self, nn_size, neuron_f='simple_sig', round_f='get_round'):
         '''
         nn_size =  rozměry objektu  tzv. kolik bude nouronů v jaké vrstvě
             např. (5,4,3,2)
@@ -12,7 +12,20 @@ class NN_info:
         self.nn_size = nn_size
         self.biases = [np.random.randn(x, 1) for x in nn_size[1:]]
         self.weights = [np.random.randn(z,y) for y,z in zip(nn_size[:-1], nn_size[1:])]
-        self.neuron_f = neuron_f
+        
+        if neuron_f == 'simple_sig':
+            self.neuron_f = self.simple_sig
+        elif neuron_f == 'sigmoid_f':
+            self.neuron_f = self.sigmoid_f
+        else:
+            print('wrong name of neuron function')
+
+        if round_f == 'get_max':
+            self.round_f = self.get_max
+        elif round_f == 'get_round':
+            self.round_f = self.get_round
+        else:
+            print('wrong max/round function')
 
 
     def feed_forward(self, input_data):
@@ -29,7 +42,7 @@ class NN_info:
                 for n in range(self.nn_size[layer+1]):
                     ws = self.weights[layer][n,:]
                     b = self.biases[layer][:,n]
-                    ss = simple_sig(ws, xs, b)
+                    ss = self.neuron_f(ws, xs, b)
                     out_values.append(ss)
                 xs = out_values
 
@@ -40,46 +53,58 @@ class NN_info:
         '''
         input_data = np array with measured valeus for one picture  
         expected value = how last layer of neurons should look like
+        returns something like
+        [[4.]
+         [5.]]
         '''
         # (A==B).all()
         # np.round(data, 2)
-        print('tady0')
         if type(expected_value) == int:
             expected_value = mnist_loader.vectorized_result(expected_value,
                                                             self.nn_size[-1])
-            print('tady1')
-            print(expected_value)
-            print(type(expected_value))
     
         network_output = self.feed_forward(input_data)
-        network_output = np.round(network_output, 0)
-        print(expected_value)
-        print(network_output)
+        network_output = self.round_f(network_output)
         if (network_output == expected_value).all():
             return True
         else:
             return False
 
+    def get_round(self, network_output):
+        '''
+        network_output = output vercor from neural netowrk
+        round all numbers to closest integer
+        return the rounded np.array
+        '''
+        return np.round(network_output, 0)
 
 
-def sigmoid_f(ws, xs, b):
-    '''
-    ws = np.array with weights [1rows x 5columns]matrix for specific neuron
-    xs = np.array with values from prevois layer [5rows x 1column]matrix
-    b = bias
-    returns value of 1-neuron as float
-
-    it is a good idea to optimize this, because it can be performed
-    to whole layer of neurons at once
-    '''
-    return 1/(1 + exp(-np.dot(ws,xs) -b))
-    
-    
-def simple_sig(ws, xs, b):
-    # only for testing purposes
-    return int(np.dot(ws, xs) + b)
+    def get_max(self, network_output):
+        '''
+        network_output = output vercor from neural netowrk
+        on max position of vector makes 1, other values to zero
+        returns the array
+        '''
+        i = network_output.argmax()
+        return mnist_loader.vectorized_result(i, self.nn_size[-1])
 
 
+    def sigmoid_f(self, ws, xs, b):
+        '''
+        ws = np.array with weights [1rows x 5columns]matrix for specific neuron
+        xs = np.array with values from prevois layer [5rows x 1column]matrix
+        b = bias
+        returns value of 1-neuron as float
+
+        it is a good idea to optimize this, because it can be performed
+        to whole layer of neurons at once
+        '''
+        return 1/(1 + exp(-np.dot(ws,xs) -b))
+        
+        
+    def simple_sig(self, ws, xs, b):
+        # only for testing purposes
+        return int(np.dot(ws, xs) + b)
 
 
 # Mějme neuronovou síť [5,4,3,2]
@@ -94,10 +119,10 @@ class Evaluator:
     3.vyhodnotí procent. úspěšnost
     '''
 
-    def __init__(self, data_path, sizes, sigmoid_f):
+    def __init__(self, data_path, sizes, neuron_f ='simple_sig'):
         self.data_path = data_path
         self.results = []
-        self.network = NN_info(sizes, sigmoid_f)
+        self.network = NN_info(sizes, neuron_f=neuron_f)
         self.data_loader()
 
 
@@ -148,10 +173,10 @@ if __name__ == "__main__":
         'JirkaNB':r'C:\Users\kalina.BUDEJOVICE\Scripts\neural-networks-and-deep-learning\src35\mnist.pkl.gz',
         'JirkaPC': r'C:\Users\krumm\scripts\neural-networks-and-deep-learning\src35\mnist.pkl.gz'}
 
-    p = paths['JirkaPC']
-    evalator = Evaluator(p, [784, 10], simple_sig)
-    # evalator.result_dumper()
-    # print(evalator.get_succes_rate())
+    p = paths['Vojta']
+    evalator = Evaluator(p, [784, 10])
+    evalator.result_dumper()
+    print(evalator.get_succes_rate())
     
     
     
