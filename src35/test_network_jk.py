@@ -187,6 +187,10 @@ class test_nn(unittest.TestCase):
 
 
 '''
+
+https://github.com/mnielsen/neural-networks-and-deep-learning
+
+
 4.5.2020
 otestovali jsme, ze nam funguje sigmoidni funkce, zjednodusena funkce,
 feed_forward funkce funguje na sit o rozmerech 2x2
@@ -235,6 +239,11 @@ we tried running the main script and it doesnt work
 TypeError: only size-1 arrays can be converted to Python scalars
 
 next session - fix this and show results, start with learning of the network
+
+17.6.2020
+create new file with our evaluator and authors netowkr class
+go through backpropagatio, print steps, see what is there
+
 '''
 
 if __name__ == "__main__":

@@ -40,12 +40,9 @@ class Network(object):
 
         # self.weights = [np(728x16), np(16x16), np(16x10)]   
 
-    def feedforward(self, a):
-        """Return the output of the network if ``a`` is input."""
-        for b, w in zip(self.biases, self.weights):
-            a = sigmoid(np.dot(w, a)+b)
-        return a
 
+
+###########
     def SGD(self, training_data, epochs, mini_batch_size, eta,
             test_data=None):
         """Train the neural network using mini-batch stochastic
@@ -76,6 +73,8 @@ class Network(object):
             else:
                 print("Epoch {} complete".format(j))
 
+
+#####
     def update_mini_batch(self, mini_batch, eta):
         """Update the network's weights and biases by applying
         gradient descent using backpropagation to a single mini batch.
@@ -92,40 +91,71 @@ class Network(object):
         self.biases = [b-(eta/len(mini_batch))*nb
                        for b, nb in zip(self.biases, nabla_b)]
 
+
+    def feedforward(self, a):
+        """Return the output of the network if ``a`` is input."""
+        for b, w in zip(self.biases, self.weights):
+            a = sigmoid(np.dot(w, a)+b)
+        return a
+#####
     def backprop(self, x, y):
         """Return a tuple ``(nabla_b, nabla_w)`` representing the
         gradient for the cost function C_x.  ``nabla_b`` and
         ``nabla_w`` are layer-by-layer lists of numpy arrays, similar
         to ``self.biases`` and ``self.weights``."""
+        #iniciace diferencialniho vektoru / parcialni derivace
         nabla_b = [np.zeros(b.shape) for b in self.biases]
         nabla_w = [np.zeros(w.shape) for w in self.weights]
         # feedforward
+
+        # vstup, hodnoty
         activation = x
+        # zmeni na list, aby mohl pridavat dalsi vrstvy vystupu/hodnot
         activations = [x] # list to store all the activations, layer by layer
+        
         zs = [] # list to store all the z vectors, layer by layer
+        # 3 jednotlive vrstvy neuronu s biasy a vahami
+
+        # feedforward
         for b, w in zip(self.biases, self.weights):
             z = np.dot(w, activation)+b
             zs.append(z)
             activation = sigmoid(z)
             activations.append(activation)
+
+        # activations[-1] = [0,0,0,0,1]   =vyslo
+        # y = [0,1,0,0,0]                 =melo vyjit
+        # self.cost_derivative(activations[-1], y) = [0,-1,0,0,1]
+
         # backward pass
-        delta = self.cost_derivative(activations[-1], y) * \
-            sigmoid_prime(zs[-1])
-        nabla_b[-1] = delta
-        nabla_w[-1] = np.dot(delta, activations[-2].transpose())
+        # lay = 1
+        # z = zs[-lay]
+        # sp = sigmoid_prime(z)
+        
+        # delta = self.cost_derivative(activations[-lay], y) * sp
+
+        # nabla_b[-lay] = delta
+        # nabla_w[-lay] = np.dot(delta, activations[-lay-1].transpose())
+        
         # Note that the variable l in the loop below is used a little
         # differently to the notation in Chapter 2 of the book.  Here,
         # l = 1 means the last layer of neurons, l = 2 is the
         # second-last layer, and so on.  It's a renumbering of the
         # scheme in the book, used here to take advantage of the fact
         # that Python can use negative indices in lists.
-        for l in range(2, self.num_layers):
-            z = zs[-l]
+        for lay in range(1, self.num_layers):
+            z = zs[-lay]
             sp = sigmoid_prime(z)
-            delta = np.dot(self.weights[-l+1].transpose(), delta) * sp
-            nabla_b[-l] = delta
-            nabla_w[-l] = np.dot(delta, activations[-l-1].transpose())
-        return (nabla_b, nabla_w)
+            if lay == 1:
+                delta = self.cost_derivative(activations[-lay], y) * sp
+            else:
+                delta = np.dot(self.weights[-lay+1].transpose(), delta) * sp
+
+            nabla_b[-lay] = delta
+            nabla_w[-lay] = np.dot(delta, activations[-lay-1].transpose())
+
+            return (nabla_b, nabla_w)
+
 
     def evaluate(self, test_data):
         """Return the number of test inputs for which the neural

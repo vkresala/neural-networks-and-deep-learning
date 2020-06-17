@@ -28,25 +28,31 @@ class NN_info:
             print('wrong max/round function')
 
 
-    def feed_forward(self, input_data):
-        '''
-        input_data = numpy array with measured values
-        result = values in last layer of our network
-        '''
-        if len(self.nn_size) == 1:
-            return input_data
-        else:
-            xs = input_data
-            for layer in range(len(self.nn_size)-1):
-                out_values = []
-                for n in range(self.nn_size[layer+1]):
-                    ws = self.weights[layer][n,:]
-                    b = self.biases[layer][:,n]
-                    ss = self.neuron_f(ws, xs, b)
-                    out_values.append(ss)
-                xs = out_values
+    # def feed_forward(self, input_data):
+    #     '''
+    #     input_data = numpy array with measured values
+    #     result = values in last layer of our network
+    #     '''
+    #     if len(self.nn_size) == 1:
+    #         return input_data
+    #     else:
+    #         xs = input_data
+    #         for layer in range(len(self.nn_size)-1):
+    #             out_values = []
+    #             for n in range(self.nn_size[layer+1]):
+    #                 ws = self.weights[layer][n,:]
+    #                 b = self.biases[layer][:,n]
+    #                 ss = self.neuron_f(ws, xs, b)
+    #                 out_values.append(ss)
+    #             xs = out_values
 
-        return np.array([xs]).transpose()
+    #     return np.array([xs]).transpose()
+
+    def feed_forward(self, a):
+        """Return the output of the network if ``a`` is input."""
+        for b, w in zip(self.biases, self.weights):
+            a = self.neuron_f(np.dot(w, a)+b)
+        return a
 
 
     def evaluate(self, input_data, expected_value):
@@ -70,6 +76,10 @@ class NN_info:
         else:
             return False
 
+    def backprop(self, x, y):
+        pass
+
+
     def get_round(self, network_output):
         '''
         network_output = output vercor from neural netowrk
@@ -79,17 +89,34 @@ class NN_info:
         return np.round(network_output, 0)
 
 
-    def get_max(self, network_output):
-        '''
-        network_output = output vercor from neural netowrk
-        on max position of vector makes 1, other values to zero
-        returns the array
-        '''
-        i = network_output.argmax()
-        return mnist_loader.vectorized_result(i, self.nn_size[-1])
+    # def get_max(self, network_output):
+    #     '''
+    #     network_output = output vercor from neural netowrk
+    #     on max position of vector makes 1, other values to zero
+    #     returns the array
+    #     '''
+    #     i = network_output.argmax()
+    #     return mnist_loader.vectorized_result(i, self.nn_size[-1])
 
 
-    def sigmoid_f(self, ws, xs, b):
+    # def sigmoid_f(self, ws, xs, b):
+    #     '''
+    #     ws = np.array with weights [1rows x 5columns]matrix for specific neuron
+    #     xs = np.array with values from prevois layer [5rows x 1column]matrix
+    #     b = bias
+    #     returns value of 1-neuron as float
+
+    #     it is a good idea to optimize this, because it can be performed
+    #     to whole layer of neurons at once
+    #     '''
+    #     return 1/(1 + exp(-np.dot(ws,xs) -b))
+        
+        
+    # def simple_sig(self, ws, xs, b):
+    #     # only for testing purposes
+    #     return int(np.dot(ws, xs) + b)
+
+    def sigmoid_f(self, z):
         '''
         ws = np.array with weights [1rows x 5columns]matrix for specific neuron
         xs = np.array with values from prevois layer [5rows x 1column]matrix
@@ -99,12 +126,12 @@ class NN_info:
         it is a good idea to optimize this, because it can be performed
         to whole layer of neurons at once
         '''
-        return 1/(1 + exp(-np.dot(ws,xs) -b))
+        return 1/(1 + exp(-z))
         
         
-    def simple_sig(self, ws, xs, b):
+    def simple_sig(self, z):
         # only for testing purposes
-        return int(np.dot(ws, xs) + b)
+        return int(z)
 
 
 # Mějme neuronovou síť [5,4,3,2]
