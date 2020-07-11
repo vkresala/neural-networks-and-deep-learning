@@ -1,0 +1,63 @@
+https://github.com/mnielsen/neural-networks-and-deep-learning
+
+
+4.5.2020
+otestovali jsme, ze nam funguje sigmoidni funkce, zjednodusena funkce,
+feed_forward funkce funguje na sit o rozmerech 2x2
+
+priste budeme pridavat test case
+- sit o rozmerech 5x3
+- sit o rozmerech 2x2x2
+
+13.5.2020
+dodělali jsem feed forward, otestovali a funguje
+vytvorili jsme funkci evaluate, ktera jeste neni otestovana > napsat 2 testy,
+pouzit+upravit ty, ktere uz jsou
+
+priste nebo do priste udelame objekt, ktery nacte data a vyhodnoti, jak
+se siti dari odhadovat vysledky
+pouzit mnist_loader podobne jako v averages
+
+18.5.2020
+v classe jsme vytvorili a otestovali metodu evaluate, ktera vyhodnocuje, jestli
+sit vyhodnotila data uspesne
+vytvorili evaluator tridu, kterou budeme pouzivat pro zjisteni uspesnosti 
+vytrenovane neuronove site
+
+DU
+dumper, success rate
+
+25.5.2020
+prosli jsme opacko objektoveho programovani
+uptavovali metody result_dumper a get_succes_rate
+konecny stav - error v simple sig, nove metody vypadaji dobre...
+TypeError: only size-1 arrays can be converted to Python scalars
+line 71, in simple_sig
+
+DU zkusit rozbehat
+
+2.6. 2020
+upravena funkce evaluate(), by vracela vektorizovanou expected_value
+
+
+8.6.2020
+fixed tests and bugs
+added sigmoid to main class
+added two rounding options
+
+we tried running the main script and it doesnt work 
+TypeError: only size-1 arrays can be converted to Python scalars
+
+next session - fix this and show results, start with learning of the network
+
+17.6.2020
+create new file with our evaluator and authors netowkr class
+go through backpropagatio, print steps, see what is there
+
+
+22.6.
+vytvorili evaluator modul
+poustili jsme evaluate, backprop, cost z network.py
+
+priste spustit komplet s epochami
+pokracovat dal
